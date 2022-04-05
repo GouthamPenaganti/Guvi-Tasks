@@ -4,6 +4,21 @@ import re
 
 filename = "Goutham.txt"
 
+def ReadDict():
+  f = open(filename, "r")
+  filecontents = f.read()
+  x = json.loads(filecontents)
+  f.close()
+  return x
+
+
+def WriteDict(updated_json):
+  f = open(filename, "w")
+  f.write(json.dumps(updated_json))
+  f.close()
+
+
+
 
 def PasswordCheck(password):
   pattern = "^.*(?=.{6,15})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$"
@@ -11,7 +26,6 @@ def PasswordCheck(password):
   if (result):
     return True
   else:
-    print("Password not valid")
     return False
 
 
@@ -28,10 +42,7 @@ def Validate(email):
 
 def ForgotPassword():
   Forgotpass_Email=input("Enter your email ")
-  f=open(filename,"r")
-  filecontents=f.read()
-  x=json.loads(filecontents)
-  f.close()
+  x=ReadDict()
   if(Forgotpass_Email in x.keys()):
     print(x[Forgotpass_Email])
   else:
@@ -41,10 +52,7 @@ def ForgotPassword():
 def Login():
   Login_Email = input("Enter your login email ")
 
-  f = open(filename, "r")
-  filecontents = f.read()
-  x = json.loads(filecontents)
-  f.close()
+  x = ReadDict()
   if (Login_Email not in x.keys()):
     print("Go and Register!")
     Register()
@@ -68,22 +76,18 @@ def Register():
 
   if (PasswordCheck(Password)):
     email_pass_Dict = {EmailID: Password}
-    if (os.stat(filename).st_size == 0):
-      f = open(filename, "w")
-      f.write(json.dumps(email_pass_Dict))
-      f.close()
+    path1 = '/content/Goutham.txt'
+    isExist = os.path.exists(path1)
+    if isExist is False:
+      WriteDict(email_pass_Dict)
       print("Registration Successful")
     else:
-
-      f = open(filename, "r")
-      filecontents = f.read()
-      x = json.loads(filecontents)
-      f.close()
+      x=ReadDict()
       x.update(email_pass_Dict)
-      f = open(filename, "w")
-      f.write(json.dumps(x))
-      f.close()
+      WriteDict(x)
       print("Registration Successful")
+  else:
+    print("Invalid Password")
 
 
 print("Enter 1 to Register")
