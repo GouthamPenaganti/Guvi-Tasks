@@ -26,7 +26,6 @@ def PasswordCheck(password):
   if (result):
     return True
   else:
-    print("Password not valid")
     return False
 
 
@@ -77,7 +76,9 @@ def Register():
 
   if (PasswordCheck(Password)):
     email_pass_Dict = {EmailID: Password}
-    if (os.stat(filename).st_size == 0):
+    path1 = '/content/Goutham.txt'
+    isExist = os.path.exists(path1)
+    if isExist is False:
       WriteDict(email_pass_Dict)
       print("Registration Successful")
     else:
@@ -85,6 +86,8 @@ def Register():
       x.update(email_pass_Dict)
       WriteDict(x)
       print("Registration Successful")
+  else:
+    print("Invalid Password")
 
 
 print("Enter 1 to Register")
